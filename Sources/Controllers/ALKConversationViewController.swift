@@ -127,6 +127,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contentOffsetDictionary: Dictionary<AnyHashable,AnyObject>!
 
+    var contentHeights = Dictionary<String,CGFloat>()
+
     required public init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
         self.localizedStringFileName = configuration.localizedStringFileName
@@ -539,6 +541,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendVideoCell.self)
         tableView.register(ALKMyGenericListCell.self)
         tableView.register(ALKFriendGenericListCell.self)
+        tableView.register(ALKFriendEmailCell.self)
         tableView.register(ALKFriendMessageQuickReplyCell.self)
         tableView.register(ALKMyMessageQuickReplyCell.self)
         tableView.register(ALKMyGenericCardCell.self)
