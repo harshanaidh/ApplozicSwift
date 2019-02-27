@@ -356,6 +356,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording()
+        contentHeights = [:]
         if viewModel.individualLaunch {
             if let _ = alMqttConversationService {
                 alMqttConversationService.unsubscribeToConversation()
