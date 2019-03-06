@@ -246,6 +246,19 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         case .genericCard:
             if message.isMyMessage {
+                
+                if let payload = message.payloadFromMetadata()?.first, let pipayTxnType = payload["pipayTxnType"] as? String {
+
+                    let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                    cell.update(viewModel: message)
+                    cell.update(chatBar: self.chatBar)
+                    cell.menuAction = {[weak self] action in
+                        self?.menuItemSelected(action: action, message: message) }
+                    return cell
+
+                }
+
                 let cell: ALKMyGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
@@ -254,6 +267,24 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     self?.menuItemSelected(action: action, message: message) }
                 return cell
             } else {
+                
+                if let payload = message.payloadFromMetadata()?.first, let pipayTxnType = payload["pipayTxnType"] as? String {
+
+                    if (pipayTxnType == "requestMoneyAcceptConfirmation" || pipayTxnType == "requestMoneyDenyConfirmation") {
+                        let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                        cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                        cell.update(viewModel: message)
+                        cell.update(chatBar: self.chatBar)
+                        cell.avatarTapped = {[weak self] in
+                            guard let currentModel = cell.viewModel else {return}
+                            self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
+                        }
+                        cell.menuAction = {[weak self] action in
+                            self?.menuItemSelected(action: action, message: message) }
+                        return cell
+                    }
+                }
+
                 let cell: ALKFriendGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
@@ -433,6 +464,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         }
     }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableTapped()
+    }
 
     //MARK: Paging
 
@@ -550,9 +585,21 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
             infoDict["card"] = card
             infoDict["template"] = template
             infoDict["messageKey"] = message.identifier
+            infoDict["payload"] = message.payloadFromMetadata()?.first
+            infoDict["metadata"] = message.metadata
+            infoDict["messageId"] = message.identifier
             infoDict["userId"] = strongSelf.viewModel.contactId
             NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichCardButtonSelected"), object: infoDict)
         }
+        
+        if let payload = message.payloadFromMetadata()?.first, let pipayTxnType = payload["pipayTxnType"] as? String {
+            
+            print(pipayTxnType)
+            if (pipayTxnType != "requestMoney" && pipayTxnType != "pinkPacket") {
+                cell.buttonStackView.isHidden = true
+            }
+        }
+        
         return cell
 
 

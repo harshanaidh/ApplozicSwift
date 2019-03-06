@@ -278,8 +278,26 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return height
         case .genericCard:
             if messageModel.isMyMessage {
+                
+                if let payload = messageModel.payloadFromMetadata()?.first, let pipayTxnType = payload["pipayTxnType"] as? String {
+                    
+                    if (pipayTxnType == "requestMoneyAcceptConfirmation" || pipayTxnType == "requestMoneyDenyConfirmation" || pipayTxnType == "requestMoney" || pipayTxnType == "pinkPacket") {
+                        let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                        return height
+                    }
+                }
+                
                 return ALKMyGenericCardCell.rowHeightFor(message: messageModel)
             } else {
+                
+                if let payload = messageModel.payloadFromMetadata()?.first, let pipayTxnType = payload["pipayTxnType"] as? String {
+                    
+                    if (pipayTxnType == "requestMoneyAcceptConfirmation" || pipayTxnType == "requestMoneyDenyConfirmation") {
+                        let height = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                        return height
+                    }
+                }
+                
                 return ALKFriendGenericCardCell.rowHeightFor(message: messageModel)
             }
         case .genericList:

@@ -398,7 +398,7 @@ open class ALKMyMessageCell: ALKMessageCell {
                 let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
                 let actualMessage = getMessageFor(key: replyId)
                 else {return}
-            if actualMessage.messageType == .text || actualMessage.messageType == .html {
+            if actualMessage.messageType == .text || actualMessage.messageType == .genericCard || actualMessage.messageType == .html {
                 previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = 0
             } else {
                 previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = Padding.PreviewImageView.width
@@ -561,6 +561,27 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         guard let message = viewModel.message else { return }
         if viewModel.messageType == .text {
             self.messageView.text = message
+        } else if (viewModel.messageType == .genericCard) {
+            if let payload = viewModel.payloadFromMetadata()?.first, let pipayTxnType = payload["pipayTxnType"] as? String {
+                
+                let amount = payload["pipayTxnAmount"] as? String
+                let currency = payload["pipayTxnCurrency"] as? String
+                
+//                , let amount = payload["pipayTxnAmount"] as? String, let msisdn = payload["pipayTxnMobile"] as? String, let currency = payload["pipayTxnCurrency"] as? String, let name = payload["pipayTxnName"] as? String
+                
+                switch pipayTxnType {
+                case "requestMoney", "requestMoneyAccepted", "requestMoneyDeny":
+                    self.messageView.text = "You have sent a money request \(amount ?? "") \(currency ?? "")"
+                case "requestMoneyAcceptConfirmation":
+                    self.messageView.text = viewModel.isMyMessage ? "You have sent money" : "You have received money"
+                case "requestMoneyDenyConfirmation":
+                    self.messageView.text = viewModel.isMyMessage ? "You have denied the money request" : "Your money request denied"
+                case "pinkPacket":
+                    self.messageView.text = "You have sent a pink packet"
+                default:
+                    self.messageView.text = message
+                }
+            }
         } else if viewModel.messageType == .html {
 
             let style = NSMutableParagraphStyle.init()

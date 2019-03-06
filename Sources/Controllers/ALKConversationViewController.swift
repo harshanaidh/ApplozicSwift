@@ -358,7 +358,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         print("back tapped")
         view.endEditing(true)
         self.viewModel.sendKeyboardDoneTyping()
-        _ = navigationController?.popToRootViewController(animated: true)
+//        _ = navigationController?.popToRootViewController(animated: true)
+        _ = navigationController?.popViewController(animated: true)
     }
 
     override func showAccountSuspensionView() {
@@ -494,9 +495,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func prepareTable() {
 
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(tableTapped(gesture:)))
-        gesture.numberOfTapsRequired = 1
-        tableView.addGestureRecognizer(gesture)
+//        let gesture = UITapGestureRecognizer(target: self, action: #selector(tableTapped(gesture:)))
+//        gesture.numberOfTapsRequired = 1
+//        tableView.addGestureRecognizer(gesture)
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -638,28 +639,31 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 break;
 
             case .startVideoRecord():
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: {
-                        granted in
-                        DispatchQueue.main.async {
-                            if granted {
-                                let imagePicker = UIImagePickerController()
-                                imagePicker.delegate = self
-                                imagePicker.allowsEditing = true;
-                                imagePicker.sourceType = .camera
-                                imagePicker.mediaTypes = [kUTTypeMovie as String]
-                                UIViewController.topViewController()?.present(imagePicker, animated: false, completion: nil)
-                            } else {
-                                let msg = weakSelf.localizedString(forKey: "EnableCameraPermissionMessage", withDefaultValue: SystemMessage.Camera.cameraPermission, fileName: weakSelf.localizedStringFileName)
-                                ALUtilityClass.permissionPopUp(withMessage: msg, andViewController: self)
-                            }
-                        }
-                    })
-                } else {
-                    let msg = weakSelf.localizedString(forKey: "CameraNotAvailableMessage", withDefaultValue: SystemMessage.Camera.CamNotAvailable, fileName: weakSelf.localizedStringFileName)
-                    let title = weakSelf.localizedString(forKey: "CameraNotAvailableTitle", withDefaultValue: SystemMessage.Camera.camNotAvailableTitle, fileName: weakSelf.localizedStringFileName)
-                    ALUtilityClass.showAlertMessage(msg, andTitle: title)
-                }
+                let requestMoneyVC =  UIStoryboard(name: "Friends", bundle:nil).instantiateViewController(withIdentifier: "requestMoneyVC")
+                self?.navigationController?.pushViewController(requestMoneyVC, animated: true)
+
+                //                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+//                    AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: {
+//                        granted in
+//                        DispatchQueue.main.async {
+//                            if granted {
+//                                let imagePicker = UIImagePickerController()
+//                                imagePicker.delegate = self
+//                                imagePicker.allowsEditing = true;
+//                                imagePicker.sourceType = .camera
+//                                imagePicker.mediaTypes = [kUTTypeMovie as String]
+//                                UIViewController.topViewController()?.present(imagePicker, animated: false, completion: nil)
+//                            } else {
+//                                let msg = weakSelf.localizedString(forKey: "EnableCameraPermissionMessage", withDefaultValue: SystemMessage.Camera.cameraPermission, fileName: weakSelf.localizedStringFileName)
+//                                ALUtilityClass.permissionPopUp(withMessage: msg, andViewController: self)
+//                            }
+//                        }
+//                    })
+//                } else {
+//                    let msg = weakSelf.localizedString(forKey: "CameraNotAvailableMessage", withDefaultValue: SystemMessage.Camera.CamNotAvailable, fileName: weakSelf.localizedStringFileName)
+//                    let title = weakSelf.localizedString(forKey: "CameraNotAvailableTitle", withDefaultValue: SystemMessage.Camera.camNotAvailableTitle, fileName: weakSelf.localizedStringFileName)
+//                    ALUtilityClass.showAlertMessage(msg, andTitle: title)
+//                }
             case .showImagePicker():
                 guard let vc = ALKCustomPickerViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
                     else {
@@ -694,7 +698,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         typingNoticeView.setDisplayName(displayName: displayName)
     }
 
-    @objc func tableTapped(gesture: UITapGestureRecognizer) {
+    @objc func tableTapped() {
         hideMoreBar()
         view.endEditing(true)
     }
