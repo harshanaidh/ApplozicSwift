@@ -197,6 +197,30 @@ open class ALKChatBar: UIView, Localizable {
         button.setImage(image, for: .normal)
         return button
     }()
+//
+//    open var requestMoney: UIButton = {
+//        let button = UIButton(type: .custom)
+//        var image = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
+//        image = image?.imageFlippedForRightToLeftLayoutDirection()
+//        button.setImage(image, for: .normal)
+//        return button
+//    }()
+//
+//    open var stickers: UIButton = {
+//        let button = UIButton(type: .custom)
+//        var image = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
+//        image = image?.imageFlippedForRightToLeftLayoutDirection()
+//        button.setImage(image, for: .normal)
+//        return button
+//    }()
+//
+//    open var pinkPacket: UIButton = {
+//        let button = UIButton(type: .custom)
+//        var image = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
+//        image = image?.imageFlippedForRightToLeftLayoutDirection()
+//        button.setImage(image, for: .normal)
+//        return button
+//    }()
 
     private enum ConstraintIdentifier: String {
         case mediaBackgroudViewHeight = "mediaBackgroudViewHeight"
@@ -344,6 +368,8 @@ open class ALKChatBar: UIView, Localizable {
         var buttonSpacing: CGFloat = 30
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
         addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
+        
+        //        addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, requestMoney, pinkPacket, stickers, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
         lineView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -375,12 +401,28 @@ open class ALKChatBar: UIView, Localizable {
         videoButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
         videoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
+//        pinkPacket.leadingAnchor.constraint(equalTo: videoButton.trailingAnchor, constant: buttonSpacing).isActive = true
+//        pinkPacket.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        pinkPacket.widthAnchor.constraint(equalToConstant: 34).isActive = true
+//        pinkPacket.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
+//
+//        requestMoney.leadingAnchor.constraint(equalTo: pinkPacket.trailingAnchor, constant: buttonSpacing).isActive = true
+//        requestMoney.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        requestMoney.widthAnchor.constraint(equalToConstant: 34).isActive = true
+//        requestMoney.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
+//
+//        stickers.leadingAnchor.constraint(equalTo: requestMoney.trailingAnchor, constant: buttonSpacing).isActive = true
+//        stickers.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        stickers.widthAnchor.constraint(equalToConstant: 34).isActive = true
+//        stickers.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
+
         galleryButton.leadingAnchor.constraint(equalTo: photoButton.trailingAnchor, constant: buttonSpacing).isActive = true
         galleryButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         galleryButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         galleryButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
         locationButton.leadingAnchor.constraint(equalTo: videoButton.trailingAnchor, constant: buttonSpacing).isActive = true
+//        locationButton.leadingAnchor.constraint(equalTo: stickers.trailingAnchor, constant: buttonSpacing).isActive = true
         locationButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         locationButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         locationButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
